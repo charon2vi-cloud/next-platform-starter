@@ -8,6 +8,18 @@ In this site, Netlify Core Primitives are used both implictly for running Next.j
 
 Implicit usage means you're using any Next.js functionality and everything "just works" when deployed - all the plumbing is done for you. Explicit usage is framework-agnostic and typically provides more features than what Next.js exposes.
 
+## VIP Parking Alicante — QR review system
+
+This repository also contains a production-ready QR-code review system for VIP
+Parking Alicante: a signed-QR customer review flow at `/r/<token>`, and an admin
+dashboard at `/dashboard` with a driver leaderboard and QR studio.
+
+**See [VIP-PARKING-REVIEW-SYSTEM.md](./VIP-PARKING-REVIEW-SYSTEM.md)** for the
+architecture, setup steps, and a detailed account of what Google's review APIs
+and policies do and do not permit.
+
+Required environment variables are listed in [.env.example](./.env.example).
+
 ## Deploying to Netlify
 
 Click the button below to deploy this template to your Netlify account.

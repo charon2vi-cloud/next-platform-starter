@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268 64" width="268" height="64" role="img" aria-label="VIP Parking Alicante">
+  <!--
+    An <img>-embedded SVG cannot inherit currentColor from the host page, so the
+    wordmark carries its own light/dark rule.
+  -->
+  <style>
+    .vip-word { fill: #101a2e; }
+    @media (prefers-color-scheme: dark) { .vip-word { fill: #f3f5f9; } }
+  </style>
+  <defs>
+    <linearGradient id="vipGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f2cf5b"/>
+      <stop offset="100%" stop-color="#d4af37"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="16" fill="url(#vipGold)"/>
+  <path d="M32 15.5l3.9 8.2 8.9 1.2-6.5 6.2 1.6 8.9L32 35.8l-7.9 4.2 1.6-8.9-6.5-6.2 8.9-1.2L32 15.5z" fill="#101a2e"/>
+  <path d="M20 45.5h24" stroke="#101a2e" stroke-width="3.5" stroke-linecap="round" opacity=".45"/>
+  <text class="vip-word" x="80" y="30" font-family="Inter, system-ui, sans-serif" font-size="21" font-weight="800" letter-spacing="-0.4">VIP PARKING</text>
+  <text class="vip-word" x="80" y="50" font-family="Inter, system-ui, sans-serif" font-size="15" font-weight="500" opacity=".65" letter-spacing="3.6">ALICANTE</text>
+</svg>

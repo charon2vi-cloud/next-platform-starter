@@ -1,0 +1,268 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..900&display=swap');
+@import 'tailwindcss';
+
+/*
+ * Design system for the customer-facing review flow.
+ * Deliberately separate from the Netlify starter's theme: this is the only thing
+ * a paying customer ever sees, so it gets its own palette, type scale and motion.
+ */
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    /* VIP navy + gold: premium, legible on a phone in bright Alicante sun. */
+    --color-vip-ink: #0b1220;
+    --color-vip-navy: #101a2e;
+    --color-vip-navy-soft: #18243d;
+    --color-vip-gold: #d4af37;
+    --color-vip-gold-bright: #f2cf5b;
+    --color-vip-cream: #fdfbf6;
+
+    --ease-vip: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+    --vip-bg: var(--color-vip-cream);
+    --vip-surface: #ffffff;
+    --vip-surface-2: #f4f1ea;
+    --vip-text: #101a2e;
+    --vip-text-muted: #5c6779;
+    --vip-border: rgb(16 26 46 / 0.1);
+    --vip-shadow: 0 20px 60px -24px rgb(16 26 46 / 0.35);
+    color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --vip-bg: #080d17;
+        --vip-surface: #101a2e;
+        --vip-surface-2: #18243d;
+        --vip-text: #f3f5f9;
+        --vip-text-muted: #9aa6bd;
+        --vip-border: rgb(255 255 255 / 0.12);
+        --vip-shadow: 0 20px 60px -24px rgb(0 0 0 / 0.8);
+        color-scheme: dark;
+    }
+}
+
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        background: var(--vip-bg);
+        color: var(--vip-text);
+        font-family: var(--font-sans);
+        /* Never let the review flow rubber-band like a document. */
+        overscroll-behavior-y: none;
+    }
+
+    /* iOS zooms any input under 16px on focus, which breaks the layout mid-flow. */
+    textarea,
+    input,
+    select {
+        font-size: max(16px, 1rem);
+    }
+
+    button {
+        touch-action: manipulation;
+    }
+}
+
+@layer components {
+    .vip-shell {
+        min-height: 100svh;
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-top: env(safe-area-inset-top);
+    }
+
+    .vip-card {
+        background: var(--vip-surface);
+        border: 1px solid var(--vip-border);
+        border-radius: 1.75rem;
+        box-shadow: var(--vip-shadow);
+    }
+
+    .vip-muted {
+        color: var(--vip-text-muted);
+    }
+
+    /* Primary action: gold, full width, thumb-height. */
+    .vip-btn {
+        @apply inline-flex items-center justify-center gap-2 w-full font-semibold text-center;
+        min-height: 3.5rem;
+        padding: 0 1.25rem;
+        border-radius: 1rem;
+        font-size: 1.0625rem;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: transform 0.18s var(--ease-vip), opacity 0.18s var(--ease-vip),
+            background-color 0.18s var(--ease-vip);
+    }
+
+    .vip-btn:active:not(:disabled) {
+        transform: scale(0.975);
+    }
+
+    .vip-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    .vip-btn-primary {
+        background: linear-gradient(180deg, var(--color-vip-gold-bright), var(--color-vip-gold));
+        color: #1a1405;
+        box-shadow: 0 12px 30px -12px rgb(212 175 55 / 0.85);
+    }
+
+    .vip-btn-secondary {
+        background: var(--vip-surface-2);
+        color: var(--vip-text);
+        border-color: var(--vip-border);
+    }
+
+    .vip-btn-ghost {
+        background: transparent;
+        color: var(--vip-text-muted);
+        min-height: 3rem;
+        font-size: 0.9375rem;
+    }
+
+    /* One-tap phrase chips — the reason customers never have to type. */
+    .vip-chip {
+        @apply inline-flex items-center gap-1.5 font-medium text-left;
+        padding: 0.6875rem 0.9375rem;
+        border-radius: 999px;
+        font-size: 0.9375rem;
+        line-height: 1.2;
+        background: var(--vip-surface-2);
+        color: var(--vip-text);
+        border: 1.5px solid transparent;
+        cursor: pointer;
+        transition: transform 0.16s var(--ease-vip), background-color 0.16s var(--ease-vip),
+            border-color 0.16s var(--ease-vip);
+    }
+
+    .vip-chip:active {
+        transform: scale(0.96);
+    }
+
+    .vip-chip[data-selected='true'] {
+        background: color-mix(in oklab, var(--color-vip-gold) 22%, var(--vip-surface));
+        border-color: var(--color-vip-gold);
+    }
+
+    .vip-field {
+        @apply w-full;
+        background: var(--vip-surface-2);
+        border: 1px solid var(--vip-border);
+        border-radius: 1rem;
+        padding: 0.875rem 1rem;
+        color: var(--vip-text);
+        line-height: 1.5;
+        resize: none;
+    }
+
+    .vip-field:focus {
+        outline: 3px solid color-mix(in oklab, var(--color-vip-gold) 35%, transparent);
+        outline-offset: 1px;
+        border-color: var(--color-vip-gold);
+    }
+}
+
+/* --- Motion ------------------------------------------------------------- */
+
+@keyframes vip-rise {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes vip-pop {
+    0% {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.12);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes vip-shimmer {
+    from {
+        background-position: 200% 0;
+    }
+    to {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes vip-confetti-fall {
+    0% {
+        transform: translate3d(0, -12vh, 0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate3d(var(--vip-drift, 0), 105vh, 0) rotate(var(--vip-spin, 540deg));
+        opacity: 0;
+    }
+}
+
+.vip-rise {
+    animation: vip-rise 0.5s var(--ease-vip) both;
+}
+
+.vip-pop {
+    animation: vip-pop 0.42s var(--ease-vip) both;
+}
+
+.vip-shimmer {
+    background: linear-gradient(
+        90deg,
+        var(--color-vip-gold) 0%,
+        var(--color-vip-gold-bright) 30%,
+        var(--color-vip-gold) 60%
+    );
+    background-size: 200% 100%;
+    animation: vip-shimmer 2.4s linear infinite;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.vip-confetti-piece {
+    position: absolute;
+    top: 0;
+    width: 9px;
+    height: 14px;
+    border-radius: 2px;
+    animation: vip-confetti-fall var(--vip-duration, 2.6s) var(--vip-delay, 0s) linear forwards;
+}
+
+/* Respect the OS setting — a flashing screen is not a premium experience. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .vip-confetti-piece {
+        display: none;
+    }
+}

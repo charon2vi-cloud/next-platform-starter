@@ -1,0 +1,40 @@
+.qr-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 1rem;
+}
+
+/* A badge is designed to be cut out and clipped to a lanyard or key fob. */
+.qr-badge {
+    background: #ffffff;
+    color: #101a2e;
+    border: 1px solid rgb(16 26 46 / 0.18);
+    border-radius: 1rem;
+    padding: 1rem;
+    text-align: center;
+    break-inside: avoid;
+}
+
+.qr-badge svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+@media print {
+    @page {
+        margin: 12mm;
+    }
+
+    body {
+        background: #ffffff !important;
+    }
+
+    .qr-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .qr-badge {
+        border: 1px dashed rgb(16 26 46 / 0.35);
+    }
+}

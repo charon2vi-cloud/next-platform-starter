@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { generateBlob } from 'app/blobs/generator';
+import { generateBlob } from './generator';
 import { ShapeRenderer } from './renderer';
 import { uploadShapeAction } from './actions';
 import { uploadDisabled } from 'utils';

@@ -1,0 +1,146 @@
+/* Dashboard-only styles. Reuses the VIP tokens from vip.css. */
+
+.dash-shell {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 4rem;
+}
+
+.dash-panel {
+    background: var(--vip-surface);
+    border: 1px solid var(--vip-border);
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+}
+
+/* Hero numbers: the figure carries the weight, the label stays recessive. */
+.dash-tile-value {
+    font-size: clamp(1.9rem, 6vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    font-variant-numeric: tabular-nums;
+}
+
+.dash-tile-label {
+    font-size: 0.8125rem;
+    color: var(--vip-text-muted);
+    font-weight: 500;
+}
+
+.dash-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.dash-table th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--vip-text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.5rem 0.75rem;
+    white-space: nowrap;
+}
+
+.dash-table td {
+    padding: 0.6875rem 0.75rem;
+    border-top: 1px solid var(--vip-border);
+    font-variant-numeric: tabular-nums;
+}
+
+.dash-table tbody tr:hover {
+    background: var(--vip-surface-2);
+}
+
+.dash-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.dash-input {
+    width: 100%;
+    background: var(--vip-surface-2);
+    border: 1px solid var(--vip-border);
+    border-radius: 0.75rem;
+    padding: 0.625rem 0.8125rem;
+    color: var(--vip-text);
+    font-size: 0.9375rem;
+}
+
+.dash-input:focus {
+    outline: 2px solid color-mix(in oklab, var(--color-vip-gold) 45%, transparent);
+    border-color: var(--color-vip-gold);
+}
+
+.dash-nav-link {
+    padding: 0.5rem 0.875rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--vip-text-muted);
+    text-decoration: none;
+}
+
+.dash-nav-link[data-active='true'] {
+    background: var(--vip-surface-2);
+    color: var(--vip-text);
+}
+
+/* --- chart surface ----------------------------------------------------- */
+
+.viz-root {
+    /* Series colors validated with the dataviz palette validator:
+       all six checks pass against both surfaces. */
+    --series-posted: #a9781a;
+    --series-scans: #2a78d6;
+    --viz-grid: rgb(16 26 46 / 0.09);
+    --viz-axis: var(--vip-text-muted);
+}
+
+@media (prefers-color-scheme: dark) {
+    .viz-root {
+        --series-posted: #ad861c;
+        --series-scans: #3987e5;
+        --viz-grid: rgb(255 255 255 / 0.1);
+    }
+}
+
+.viz-bar {
+    /* 4px rounded data-end, anchored square to the baseline. */
+    border-radius: 4px 4px 0 0;
+    transition: opacity 0.15s ease;
+}
+
+.viz-col:hover .viz-bar {
+    opacity: 0.72;
+}
+
+.viz-tooltip {
+    position: absolute;
+    z-index: 20;
+    pointer-events: none;
+    background: var(--vip-surface);
+    border: 1px solid var(--vip-border);
+    border-radius: 0.625rem;
+    box-shadow: 0 12px 32px -12px rgb(0 0 0 / 0.45);
+    padding: 0.5rem 0.6875rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.viz-legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+@media print {
+    .dash-no-print {
+        display: none !important;
+    }
+}

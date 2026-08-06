@@ -308,7 +308,69 @@ Delete `.netlify/vip-dev-store/` (or the blob stores) to clear it again.
 
 ---
 
-## 8. Known gaps
+## 8. Deploying on Netlify
+
+The repository is the Netlify Next.js platform starter, so the deploy path is the
+normal one — but three details specific to this feature will bite if missed.
+
+### 8.1 Connect the site
+
+1. Netlify → **Add new site → Import an existing project** → pick this repository.
+2. Build command `npm run build`, publish directory `.next` — already set in
+   `netlify.toml`, along with `NODE_VERSION = "22"` (Next 16 needs ≥ 20.9).
+3. The Next.js runtime is installed automatically. Nothing to configure.
+
+**Netlify Blobs needs no setup.** The two stores (`vip-drivers`, `vip-events`)
+are created on first write. Every page that reads them is `force-dynamic`, so
+nothing touches Blobs during the build — that would fail, since the blob context
+only exists at request time.
+
+### 8.2 Set the environment variables
+
+Site configuration → **Environment variables**. At minimum:
+
+| Variable | Value |
+|---|---|
+| `VIP_QR_SECRET` | `openssl rand -base64 48` |
+| `VIP_DASHBOARD_PASSWORD` | your manager password |
+| `NEXT_PUBLIC_VIP_GOOGLE_PLACE_ID` *or* `NEXT_PUBLIC_VIP_GOOGLE_REVIEW_URL` | from Google (§7) |
+| `NEXT_PUBLIC_VIP_ORIGIN` | the **final** public domain — see §8.3 |
+
+> **`NEXT_PUBLIC_*` variables are baked in at build time.** Changing one in the
+> Netlify UI does nothing until you trigger a redeploy. The server-only ones
+> (`VIP_QR_SECRET`, `VIP_DASHBOARD_PASSWORD`) are read at request time and take
+> effect immediately.
+
+Scope them to **all deploy contexts** unless you deliberately want previews to
+use a different Place ID. Give Deploy Previews a *different* `VIP_QR_SECRET` if
+you want preview-minted QR codes to be invalid in production.
+
+### 8.3 Decide the domain before printing anything
+
+**A printed QR code is permanent.** It encodes an absolute URL, so if badges are
+printed against `your-site.netlify.app` and you later move to
+`reviews.vipparkingalicante.com`, every laminated badge stops working.
+
+Do this in order:
+
+1. Attach the real domain in Netlify (**Domain management**) first.
+2. Set `NEXT_PUBLIC_VIP_ORIGIN` to that domain and redeploy.
+3. *Then* open `/dashboard/qr` and print.
+
+The QR studio falls back to the request host when `NEXT_PUBLIC_VIP_ORIGIN` is
+unset, which is convenient for testing and dangerous for printing — it will
+happily generate codes pointing at a preview URL.
+
+### 8.4 Rotating `VIP_QR_SECRET` invalidates every printed badge
+
+The secret signs the QR tokens. Changing it makes every existing code fail
+verification and show the "we could not read this QR code" screen. If it ever
+leaks, rotating it *is* the correct response — just budget for reprinting the
+badges at the same time.
+
+---
+
+## 9. Known gaps
 
 - **`posted` is self-reported.** The customer taps "Yes, posted!" — nothing
   verifies it against Google. §2.5 explains the fix. If driver bonuses are paid

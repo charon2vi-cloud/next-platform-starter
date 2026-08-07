@@ -92,8 +92,7 @@ export default async function QrStudioPage({ searchParams }) {
                 <div>
                     <h1 className="text-2xl font-extrabold tracking-tight">QR studio</h1>
                     <p className="text-sm mt-1" style={{ color: 'var(--vip-text-muted)' }}>
-                        Every code is cryptographically signed, so a review can only ever be credited to the driver
-                        whose badge was actually scanned.
+                        Copy a simple link into your own QR generator, or print a ready-made signed badge below.
                     </p>
                 </div>
                 <PrintButton />

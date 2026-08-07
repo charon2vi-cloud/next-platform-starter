@@ -6,6 +6,7 @@ import { listDrivers } from 'lib/vip/drivers';
 import { signToken, reviewUrlForToken } from 'lib/vip/token';
 import { brand, defaultTokenTtlSeconds } from 'lib/vip/config';
 import { PrintButton } from './print-button';
+import { CopyLink } from './copy-link';
 
 export const dynamic = 'force-dynamic';
 
@@ -99,6 +100,37 @@ export default async function QrStudioPage({ searchParams }) {
             </div>
 
             <div className="dash-panel dash-no-print">
+                <h2 className="text-base font-bold">Simple links — for Adobe, Canva or any QR maker</h2>
+                <p className="text-xs mt-1" style={{ color: 'var(--vip-text-muted)' }}>
+                    Copy a link and paste it into whichever QR generator you like. These are short, permanent, and
+                    readable out loud. The customer lands on the review screen with the driver already filled in.
+                </p>
+
+                <div className="mt-4 space-y-4">
+                    <div>
+                        <p className="text-sm font-semibold">Whole team — one code for everyone</p>
+                        <p className="text-xs mb-1.5" style={{ color: 'var(--vip-text-muted)' }}>
+                            The customer taps whoever handed their car back.
+                        </p>
+                        <CopyLink url={base} label="team" />
+                    </div>
+
+                    {drivers.map((driver) => (
+                        <div key={driver.id}>
+                            <p className="text-sm font-semibold">{driver.name}</p>
+                            <CopyLink url={`${base}/d/${driver.id}`} label={driver.name} />
+                        </div>
+                    ))}
+
+                    {drivers.length === 0 && (
+                        <p className="text-sm" style={{ color: 'var(--vip-text-muted)' }}>
+                            Add drivers first and their links appear here.
+                        </p>
+                    )}
+                </div>
+            </div>
+
+            <div className="dash-panel dash-no-print">
                 <h2 className="text-base font-bold">One-off booking code</h2>
                 <p className="text-xs mt-1" style={{ color: 'var(--vip-text-muted)' }}>
                     Optional. Adds the booking reference and vehicle to the customer&apos;s screen, and expires after{' '}
@@ -145,7 +177,8 @@ export default async function QrStudioPage({ searchParams }) {
             <div className="dash-panel">
                 <h2 className="text-base font-bold">Driver badges</h2>
                 <p className="text-xs mt-1 mb-4" style={{ color: 'var(--vip-text-muted)' }}>
-                    Permanent codes — print once, laminate, clip to the lanyard.
+                    Ready-made codes — print once, laminate, clip to the lanyard. These carry a signature, so unlike
+                    the simple links above they cannot be forged to credit the wrong driver.
                 </p>
 
                 {badges.length === 0 ? (

@@ -19,7 +19,7 @@ Driver hands back the car
 Customer scans the QR on the driver's lanyard
         │
         ▼
-/r/<signed-token>          ← page already knows the driver, booking and vehicle
+/d/sofiane  (or /r/<signed-token>)   ← page already knows which driver
         │
         ├─ "Thank you!" splash with the driver's photo and name
         ├─ "Was everything perfect?"  → five big stars
@@ -159,12 +159,15 @@ policy.
 
 | Route | What it is |
 |---|---|
-| `/r/<token>` | The customer review experience. Public, no login, dynamic. |
+| `/` | Front door. Driver picker — also the target for one company-wide QR code. |
+| `/d/<driver>` | **The simple link.** `…/d/sofiane` — paste into any QR generator. |
+| `/r/<token>` | The signed-QR entry point, carrying booking reference and expiry. |
 | `/api/vip/track` | Funnel beacon (`scan`, `rated`, `feedback`, `handoff`, `posted`). |
 | `/dashboard` | Totals, average rating, conversion, daily chart, monthly table, leaderboard, private feedback. |
 | `/dashboard/drivers` | Driver roster — display name and optional photo. |
 | `/dashboard/qr` | Generates and prints signed QR badges. |
 | `/dashboard/login` | Password gate. |
+| `/starter` | The original Netlify starter demo, kept out of the way. |
 
 The Netlify starter's own demo pages are untouched; they moved into the
 `app/(netlify)/` route group so the review flow could have its own root layout,
@@ -172,7 +175,48 @@ free of the starter's header, footer and dark-blue theme.
 
 ---
 
-## 4. The QR code and why it is signed
+## 4. Two ways to make a QR code
+
+**Use your own QR generator (Adobe, Canva, anything).** The dashboard's QR studio
+lists a plain link per driver with a Copy button:
+
+```
+https://your-site/               ← one code for the whole team; customer taps their driver
+https://your-site/d/sofiane      ← Sofiane's personal code
+https://your-site/d/marta        ← Marta's
+```
+
+Copy, paste into the generator, download the PNG, print. That is the whole
+workflow. The links are short, permanent, and readable out loud over the phone.
+
+Optional extras, both safe to leave off:
+`​/d/sofiane?booking=VP-88213&vehicle=BMW%20X5`
+
+**Or print the signed badges** from the QR studio, which is the more secure
+option — see §5.
+
+### Which should you use?
+
+| | Simple link `/d/sofiane` | Signed badge `/r/<token>` |
+|---|---|---|
+| Make it with any QR tool | ✅ | ❌ (print from the QR studio) |
+| Short enough to read aloud | ✅ | ❌ |
+| Carries booking ref & vehicle | via query string | ✅ built in |
+| Can expire | ❌ | ✅ |
+| **Can be forged** | ⚠️ yes — the name is guessable | ❌ no |
+
+The forgery point is the only real trade-off: anyone who guesses `/d/sofiane`
+could submit a review credited to Sofiane. For a small team where everyone knows
+each other, that is usually fine. **If driver bonuses are ever paid straight from
+these numbers, use the signed badges** — the whole point of the signature is that
+a review can only be credited to a badge the company actually issued.
+
+Both work at the same time. Nothing stops you starting with simple links and
+switching later.
+
+---
+
+## 5. The signed QR code, in detail
 
 A QR code encodes a URL like:
 
@@ -203,7 +247,7 @@ Tampering with either yields `bad-signature`; an old booking code yields
 
 ---
 
-## 5. Conversion features that are actually in the build
+## 6. Conversion features that are actually in the build
 
 The design target was *"a tired passenger holding a suitcase, one-handed, in the
 sun, in a language that may not be English."*
@@ -246,7 +290,7 @@ sun, in a language that may not be English."*
 
 ---
 
-## 6. Data
+## 7. Data
 
 Netlify Blobs, two stores. No external database.
 
@@ -268,7 +312,7 @@ and paste friction — it is the number to optimise.
 
 ---
 
-## 7. Setup
+## 8. Setup
 
 ```bash
 npm install
@@ -308,7 +352,7 @@ Delete `.netlify/vip-dev-store/` (or the blob stores) to clear it again.
 
 ---
 
-## 8. Deploying on Netlify
+## 9. Deploying on Netlify
 
 The repository is the Netlify Next.js platform starter, so the deploy path is the
 normal one — but three details specific to this feature will bite if missed.
@@ -355,7 +399,7 @@ Do this in order:
 
 1. Attach the real domain in Netlify (**Domain management**) first.
 2. Set `NEXT_PUBLIC_VIP_ORIGIN` to that domain and redeploy.
-3. *Then* open `/dashboard/qr` and print.
+3. *Then* open `/dashboard/qr`, copy the links or print the badges.
 
 The QR studio falls back to the request host when `NEXT_PUBLIC_VIP_ORIGIN` is
 unset, which is convenient for testing and dangerous for printing — it will
@@ -370,7 +414,7 @@ badges at the same time.
 
 ---
 
-## 9. Known gaps
+## 10. Known gaps
 
 - **`posted` is self-reported.** The customer taps "Yes, posted!" — nothing
   verifies it against Google. §2.5 explains the fix. If driver bonuses are paid
